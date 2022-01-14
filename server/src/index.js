@@ -3,6 +3,8 @@ import http from 'http'
 import {Server} from 'socket.io'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import sequelize from './db.js'
+import router from './routes/index.js'
 
 dotenv.config()
 
@@ -22,12 +24,21 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 5000
 
-app.get('/', (req, res) => {
-    res.send('hello')
-})
+app.use('/api', router)
 
-io.on('connection', (socket) => {
-    console.log('User connected')
-})
+const start = async () => {
+    try {
+        await sequelize.authenticate()
+        await sequelize.sync()
 
-server.listen(PORT, () => console.log(`Server starts on port ${PORT}`))
+        io.on('connection', (socket) => {
+            console.log('User connected')
+        })
+
+        server.listen(PORT, () => console.log(`Server starts on port ${PORT}`))
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+start()

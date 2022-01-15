@@ -7,8 +7,13 @@ const Register = () => {
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
+    const handleRegister = () => {
+
+    }
+
     return (
         <form className={s.registerForm}>
+            <div>Registration</div>
             <input
                 type="text"
                 placeholder='Enter login'
@@ -21,6 +26,11 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.currentTarget.value)}
             />
+            <button
+                type='submit'
+                onClick={handleRegister}
+            >Register
+            </button>
         </form>
     )
 }

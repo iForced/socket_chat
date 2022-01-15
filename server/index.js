@@ -32,7 +32,7 @@ const start = async () => {
         await sequelize.sync()
 
         io.on('connection', (socket) => {
-            console.log('User connected')
+            console.log('User connected', socket)
         })
 
         server.listen(PORT, () => console.log(`Server starts on port ${PORT}`))

@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import io from 'socket.io-client'
+import React from 'react'
 import { NavLink, Route, Routes } from 'react-router-dom'
 import Chat from './components/Chat/Chat'
 import Register from './components/Register/Register'
@@ -10,13 +9,10 @@ import { AppStateType } from './redux/store'
 
 const App = () => {
 
-    // useEffect(() => {
-    //     const socket = io('http://localhost:5000')
-    // }, [])
-
     const dispatch = useDispatch()
 
     const isAuthorized = useSelector<AppStateType, boolean>(state => state.authReducer.isAuthorized)
+    console.log(isAuthorized)
 
     const handleLogout = () => {
         dispatch(logoutRequest())

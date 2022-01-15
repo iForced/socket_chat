@@ -1,8 +1,10 @@
-import React, { useState, MouseEvent } from 'react'
+import React, { useState, MouseEvent, useEffect } from 'react'
 // @ts-ignore
 import s from  './Register.module.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { registerRequest } from '../../redux/auth/actions'
+import { AppStateType } from '../../redux/store'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
 
@@ -10,11 +12,20 @@ const Register = () => {
     const [password, setPassword] = useState<string>('')
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const isAuthorized = useSelector<AppStateType, boolean>(state => state.authReducer.isAuthorized)
 
     const handleRegister = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         dispatch(registerRequest(login, password))
+        setLogin('')
+        setPassword('')
     }
+
+    useEffect(() => {
+        if (isAuthorized) navigate('/')
+    }, [isAuthorized])
 
     return (
         <form className={s.registerForm}>

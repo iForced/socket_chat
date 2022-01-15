@@ -1,19 +1,22 @@
 import { axiosInstance } from './config'
 
 export const authAPI = {
-    register(login: string, password: string) {
-        return axiosInstance.post(`/auth/register`, {login, password})
+    async register(login: string, password: string) {
+        const response = await axiosInstance.post(`/auth/register`, {login, password})
+        return response.data
     },
 
-    login(login: string, password: string) {
-        return axiosInstance.post(`/auth/login`, {login, password})
+    async login(login: string, password: string) {
+        const response = await axiosInstance.post(`/auth/login`, {login, password})
+        return response.data
     },
 
-    me(token: string) {
-        return axiosInstance.get(`/auth/me`, {
+    async me(token: string) {
+        const response = await axiosInstance.get(`/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             }
         })
+        return response.data
     }
 }

@@ -7,9 +7,9 @@ import Login from './components/Login/Login'
 
 const App = () => {
 
-    useEffect(() => {
-        const socket = io('http://localhost:5000')
-    }, [])
+    // useEffect(() => {
+    //     const socket = io('http://localhost:5000')
+    // }, [])
 
     return (
         <div>

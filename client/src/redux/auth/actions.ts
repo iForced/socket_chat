@@ -28,8 +28,12 @@ export const setAuthorized = (isAuthorized: boolean) => {
 
 // Saga actions
 
-export const registerRequest = () => {
+export const registerRequest = (login: string, password: string) => {
     return {
         type: AuthSagaActions.REGISTER_REQUEST,
+        payload: {
+            login,
+            password,
+        }
     }
 }

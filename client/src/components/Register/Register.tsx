@@ -1,14 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, MouseEvent } from 'react'
 // @ts-ignore
 import s from  './Register.module.css'
+import { useDispatch } from 'react-redux'
+import { registerRequest } from '../../redux/auth/actions'
 
 const Register = () => {
 
     const [login, setLogin] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
-    const handleRegister = () => {
+    const dispatch = useDispatch()
 
+    const handleRegister = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        dispatch(registerRequest(login, password))
     }
 
     return (

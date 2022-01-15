@@ -17,7 +17,7 @@ const io = new Server(server, {
 })
 
 app.use(cors({
-    origin: ['http://localhost:3000'],
+    origin: 'http://localhost:3000',
     credential: true,
 }))
 app.use(express.json())

@@ -4,6 +4,7 @@ export enum AuthActions {
 }
 export enum AuthSagaActions {
     REGISTER_REQUEST = 'AUTH@SAGA/REGISTER_REQUEST',
+    LOGIN_REQUEST = 'AUTH@SAGA/LOGIN_REQUEST',
 }
 
 // Reducer actions
@@ -31,6 +32,15 @@ export const setAuthorized = (isAuthorized: boolean) => {
 export const registerRequest = (login: string, password: string) => {
     return {
         type: AuthSagaActions.REGISTER_REQUEST,
+        payload: {
+            login,
+            password,
+        }
+    }
+}
+export const loginRequest = (login: string, password: string) => {
+    return {
+        type: AuthSagaActions.LOGIN_REQUEST,
         payload: {
             login,
             password,

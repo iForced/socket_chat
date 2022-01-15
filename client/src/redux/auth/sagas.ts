@@ -1,6 +1,7 @@
 import {takeEvery, call, put} from "@redux-saga/core/effects";
-import { AuthSagaActions, registerRequest } from './actions'
+import { AuthSagaActions, loginRequest, registerRequest, setAuthorized, setUser } from './actions'
 import { authAPI } from '../../api/authAPI'
+import { decodeToken } from 'react-jwt'
 
 export function * watchRegisterRequestSaga() {
     yield takeEvery(AuthSagaActions.REGISTER_REQUEST, registerRequestSaga)
@@ -8,4 +9,16 @@ export function * watchRegisterRequestSaga() {
 export function * registerRequestSaga(action: ReturnType<typeof registerRequest>) {
     const {login, password} = action.payload
     yield call(authAPI.register, login, password)
+}
+
+export function * watchLoginRequestSaga() {
+    yield takeEvery(AuthSagaActions.LOGIN_REQUEST, loginRequestSaga)
+}
+export function * loginRequestSaga(action: ReturnType<typeof loginRequest>) {
+    const {login, password} = action.payload
+    const response: {token: string} = yield call(authAPI.login, login, password)
+    const userData = decodeToken(response.token)
+    // @ts-ignore
+    yield put(setUser(userData.id, userData.login))
+    yield put(setAuthorized(true))
 }

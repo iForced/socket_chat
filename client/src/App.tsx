@@ -12,7 +12,6 @@ const App = () => {
     const dispatch = useDispatch()
 
     const isAuthorized = useSelector<AppStateType, boolean>(state => state.authReducer.isAuthorized)
-    console.log(isAuthorized)
 
     const handleLogout = () => {
         dispatch(logoutRequest())

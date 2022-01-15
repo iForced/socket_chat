@@ -1,3 +1,5 @@
+import { UserType } from './types'
+
 export enum AuthActions {
     SET_USER = 'AUTH/SET_USER',
     SET_AUTHORIZED = 'AUTH/SET_AUTHORIZED',
@@ -11,12 +13,11 @@ export enum AuthSagaActions {
 
 // Reducer actions
 
-export const setUser = (id: number | null, login: string | null) => {
+export const setUser = (user: UserType | null) => {
     return {
         type: AuthActions.SET_USER,
         payload: {
-            id,
-            login,
+            user,
         }
     } as const
 }

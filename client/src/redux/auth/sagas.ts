@@ -20,7 +20,7 @@ export function * loginRequestSaga(action: ReturnType<typeof loginRequest>) {
     localStorage.setItem('tokenChat', response.token)
     const userData = decodeToken(response.token)
     // @ts-ignore
-    yield put(setUser(userData.id, userData.login))
+    yield put(setUser(userData))
     yield put(setAuthorized(true))
 }
 
@@ -33,7 +33,7 @@ export function * checkMeRequestSaga(action: ReturnType<typeof checkMeRequest>) 
     localStorage.setItem('tokenChat', response.token)
     const userData = decodeToken(response.token)
     // @ts-ignore
-    yield put(setUser(userData.id, userData.login))
+    yield put(setUser(userData))
     yield put(setAuthorized(true))
 }
 
@@ -42,6 +42,6 @@ export function * watchLogoutRequestSaga() {
 }
 export function * logoutRequestSaga() {
     localStorage.removeItem('tokenChat')
-    yield put(setUser(null, null))
+    yield put(setUser(null))
     yield put(setAuthorized(false))
 }

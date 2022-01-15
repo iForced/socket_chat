@@ -2,8 +2,7 @@ import { AuthActionsType, AuthInitialStateType } from './types'
 import { AuthActions } from './actions'
 
 const initialState: AuthInitialStateType = {
-    id: null,
-    login: null,
+    user: null,
     isAuthorized: false,
 }
 
@@ -13,8 +12,7 @@ export const authReducer = (state: AuthInitialStateType = initialState, action: 
         case AuthActions.SET_USER:
             return {
                 ...state,
-                id: action.payload.id,
-                login: action.payload.login,
+                user: action.payload.user
             }
 
         case AuthActions.SET_AUTHORIZED:

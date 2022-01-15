@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from '@redux-saga/core/effects'
-import { addMessage, addMessageRequest, ChatSagaActions } from './actions'
+import { addMessage, addMessageRequest, ChatSagaActions, setInitMessages } from './actions'
 import { messagesAPI } from '../../api/messagesAPI'
 import { MessageType } from './types'
 
@@ -10,4 +10,12 @@ export function * addMessageRequestSaga(action: ReturnType<typeof addMessageRequ
     // const {message: {senderId, receiverId, text}} = action.payload
     // const addedMessage: MessageType = yield call(messagesAPI.addMessage, senderId, receiverId, text)
     // yield put(addMessage(addedMessage))
+}
+
+export function * watchSetInitMessagesRequestSaga() {
+    yield takeEvery(ChatSagaActions.SET_INIT_MESSAGES_REQUEST, setInitMessagesRequestSaga)
+}
+export function * setInitMessagesRequestSaga() {
+    const initMessages: {count: number, rows: Array<MessageType>} = yield call(messagesAPI.getAllMessages)
+    yield put(setInitMessages(initMessages.rows))
 }

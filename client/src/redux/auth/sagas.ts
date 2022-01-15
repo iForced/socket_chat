@@ -17,6 +17,7 @@ export function * watchLoginRequestSaga() {
 export function * loginRequestSaga(action: ReturnType<typeof loginRequest>) {
     const {login, password} = action.payload
     const response: {token: string} = yield call(authAPI.login, login, password)
+    localStorage.setItem('tokenChat', response.token)
     const userData = decodeToken(response.token)
     // @ts-ignore
     yield put(setUser(userData.id, userData.login))
@@ -29,8 +30,18 @@ export function * watchCheckMeRequestSaga() {
 export function * checkMeRequestSaga(action: ReturnType<typeof checkMeRequest>) {
     const {token} = action.payload
     const response: {token: string} = yield call(authAPI.me, token)
+    localStorage.setItem('tokenChat', response.token)
     const userData = decodeToken(response.token)
     // @ts-ignore
     yield put(setUser(userData.id, userData.login))
     yield put(setAuthorized(true))
+}
+
+export function * watchLogoutRequestSaga() {
+    yield takeEvery(AuthSagaActions.LOGOUT_REQUEST, logoutRequestSaga)
+}
+export function * logoutRequestSaga() {
+    localStorage.removeItem('tokenChat')
+    yield put(setUser(null, null))
+    yield put(setAuthorized(false))
 }

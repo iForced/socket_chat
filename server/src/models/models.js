@@ -1,4 +1,4 @@
-import sequelize from '../db.js'
+import sequelize from '../../db.js'
 import { DataTypes } from 'sequelize'
 
 export const Message = sequelize.define('message', {

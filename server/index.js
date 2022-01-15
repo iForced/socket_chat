@@ -4,7 +4,7 @@ import {Server} from 'socket.io'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import sequelize from './db.js'
-import router from './routes/index.js'
+import router from './src/routes/index.js'
 
 dotenv.config()
 

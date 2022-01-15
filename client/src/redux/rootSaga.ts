@@ -5,7 +5,8 @@ import {
     watchLogoutRequestSaga,
     watchRegisterRequestSaga
 } from './auth/sagas'
-import { watchAddMessageRequestSaga, watchSetInitMessagesRequestSaga } from './chat/sagas'
+import { watchSetInitMessagesRequestSaga } from './chat/sagas'
+import { watchGetAllUsersRequestSaga } from './users/sagas'
 
 export function * rootSaga () {
     yield all([
@@ -13,7 +14,7 @@ export function * rootSaga () {
         watchLoginRequestSaga(),
         watchCheckMeRequestSaga(),
         watchLogoutRequestSaga(),
-        watchAddMessageRequestSaga(),
         watchSetInitMessagesRequestSaga(),
+        watchGetAllUsersRequestSaga(),
     ])
 }

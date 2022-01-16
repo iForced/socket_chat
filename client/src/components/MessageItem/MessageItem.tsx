@@ -11,9 +11,9 @@ type PropsType = {
 const MessageItem: FC<PropsType> = ({from, to, text}) => {
     return (
         <div className={s.message}>
-            <h3>From: {from}</h3>
-            <h3>To: {to}</h3>
-            <div>Text: {text}</div>
+            <h5 className={s.fromUser}>From: <span className={s.userName}>{from}</span></h5>
+            <h5 className={s.toUser}>To: <span className={s.userName}>{to}</span></h5>
+            <div>Text: <span className={s.messageText}>{text}</span></div>
         </div>
     )
 }

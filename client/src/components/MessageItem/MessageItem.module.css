@@ -1,5 +1,15 @@
 .message {
-    background-color: cornflowerblue;
-    padding: 10px;
+    background-color: #262626;
+    padding: 15px 10px;
     margin: 10px;
+    color: white;
+    border-radius: 10px;
+}
+.userName,
+.messageText {
+    color: #e38443;
+}
+.fromUser,
+.toUser {
+    margin: 0;
 }

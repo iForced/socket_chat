@@ -6,6 +6,8 @@ import Login from './components/Login/Login'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutRequest } from './redux/auth/actions'
 import { AppStateType } from './redux/store'
+import Users from './components/Users/Users'
+import Profile from './components/Profile/Profile'
 
 const App = () => {
 
@@ -20,7 +22,7 @@ const App = () => {
     return (
         <div>
             <div>
-                <NavLink to='/'>Chat</NavLink>
+                <NavLink to='/'>Profile</NavLink>
                 <NavLink to='/register'>Register</NavLink>
                 <NavLink to='/login'>Login</NavLink>
                 {isAuthorized
@@ -29,7 +31,9 @@ const App = () => {
                 }
             </div>
             <Routes>
-                <Route path='/' element={<Chat/>} />
+                <Route path='/' element={<Profile/>} />
+                <Route path='/users' element={<Users/>} />
+                <Route path='/users/:userId' element={<Chat/>} />
                 <Route path='/register' element={<Register/>} />
                 <Route path='/login' element={<Login/>} />
             </Routes>

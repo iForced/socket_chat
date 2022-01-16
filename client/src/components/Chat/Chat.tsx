@@ -28,7 +28,7 @@ const Chat = () => {
     useEffect(() => {
         if (!isAuthorized) navigate('/login')
     }, [isAuthorized])
-
+    //
     useEffect(() => {
         const token = localStorage.getItem('tokenChat')
         if (token) dispatch(checkMeRequest(token))

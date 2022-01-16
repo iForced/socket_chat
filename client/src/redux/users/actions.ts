@@ -21,11 +21,8 @@ export const setAllUsers = (users: Array<UserType>) => {
 
 // Saga actions
 
-export const getAllUsersRequest = (users: Array<UserType>) => {
+export const getAllUsersRequest = () => {
     return {
         type: UsersSagaActions.GET_ALL_USERS_REQUEST,
-        payload: {
-            users,
-        }
     } as const
 }

@@ -19,7 +19,7 @@ const Users = () => {
     }, [])
 
     return (
-        <div>
+        <div className={s.usersList}>
             {users
                 .filter(user => user.id !== me!.id)
                 .map(user =>
@@ -27,7 +27,7 @@ const Users = () => {
                         to={`/users/${user.id}`}
                         className={s.userItem}
                         key={user.id}
-                    >Chat with {user.login}
+                    >Chat with <span className={s.userLogin}>{user.login}</span>
                     </NavLink>
                 )
             }

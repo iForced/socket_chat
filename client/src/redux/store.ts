@@ -3,10 +3,12 @@ import createSagaMiddleware from 'redux-saga';
 import { authReducer } from './auth/authReducer'
 import { rootSaga } from './rootSaga'
 import { chatReducer } from './chat/chatReducer'
+import { usersReducer } from './users/usersReducer'
 
 const rootReducer = combineReducers({
     authReducer,
     chatReducer,
+    usersReducer,
 })
 
 const sagaMiddleware = createSagaMiddleware();

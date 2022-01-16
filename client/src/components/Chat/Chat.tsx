@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import s from './Chat.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppStateType } from '../../redux/store'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useRoutes, useSearchParams } from 'react-router-dom'
 import { checkMeRequest } from '../../redux/auth/actions'
 import io, { Socket } from 'socket.io-client'
 import { MessageType } from '../../redux/chat/types'
@@ -24,6 +24,7 @@ const Chat = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const {userId: receiverId} = useParams()
 
     useEffect(() => {
         if (!isAuthorized) navigate('/login')
@@ -36,7 +37,6 @@ const Chat = () => {
 
     useEffect(() => {
         socket.on('send_init_messages', (messages: Array<MessageType>) => {
-            console.log(messages)
             dispatch(setInitMessages(messages))
         })
     }, [])
@@ -49,7 +49,7 @@ const Chat = () => {
 
     const handleMessageSend = () => {
         if (user) {
-            socket.emit('send_message', {senderId: user.id, text: messageText})
+            socket.emit('send_message', {senderId: user.id, receiverId , text: messageText})
             setMessageText('')
         }
     }

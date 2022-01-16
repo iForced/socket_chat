@@ -32,20 +32,18 @@ const start = async () => {
         await sequelize.authenticate()
         await sequelize.sync()
 
-        io.on('connection', (socket) => {
+        io.on('connection', async (socket) => {
             console.log('User connected')
+
+            const response = await Message.findAndCountAll()
+            socket.emit('send_init_messages', response.rows)
+
             socket.on('send_message', async (message) => {
-                const {senderId, text} = message
-                await Message.create({senderId, receiverId: 4, text})
+                const {senderId, receiverId, text} = message
+                await Message.create({senderId, receiverId, text})
                 const allMessages = await Message.findAndCountAll()
                 io.emit('new_message_added', allMessages.rows)
-
-            });
-
-            (async function () {
-                const response = await Message.findAndCountAll()
-                socket.emit('send_init_messages', response.rows)
-            })()
+            })
         })
 
         server.listen(PORT, () => console.log(`Server starts on port ${PORT}`))

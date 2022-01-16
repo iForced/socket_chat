@@ -35,14 +35,17 @@ const start = async () => {
         io.on('connection', async (socket) => {
             console.log('User connected')
 
-            const response = await Message.findAndCountAll()
-            socket.emit('send_init_messages', response.rows)
+            socket.on('send_init_messages_request', async (params) => {
+                const {senderId, receiverId} = params
+                const response = await Message.findAll({where: {senderId, receiverId}})
+                io.emit('send_init_messages', response)
+            })
 
             socket.on('send_message', async (message) => {
                 const {senderId, receiverId, text} = message
                 await Message.create({senderId, receiverId, text})
-                const allMessages = await Message.findAndCountAll()
-                io.emit('new_message_added', allMessages.rows)
+                const updatedMessages = await Message.findAll({where: {senderId, receiverId}})
+                io.emit('new_message_added', updatedMessages)
             })
         })
 

@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react'
 import s from './Chat.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppStateType } from '../../redux/store'
-import { useNavigate, useParams, useRoutes, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { checkMeRequest } from '../../redux/auth/actions'
-import io, { Socket } from 'socket.io-client'
+import io  from 'socket.io-client'
 import { MessageType } from '../../redux/chat/types'
 import MessageItem from '../MessageItem/MessageItem'
-import { addMessage, setInitMessages, setInitMessagesRequest, updateMessages } from '../../redux/chat/actions'
-import { DefaultEventsMap } from '@socket.io/component-emitter'
+import { setInitMessages, updateMessages } from '../../redux/chat/actions'
 import { UserType } from '../../redux/auth/types'
 
 const socket = io('http://localhost:5000')
@@ -36,9 +35,12 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        socket.on('send_init_messages', (messages: Array<MessageType>) => {
-            dispatch(setInitMessages(messages))
-        })
+        if (user) {
+            socket.emit('send_init_messages_request', {senderId: String(user.id), receiverId})
+            socket.on('send_init_messages', (initMessages: Array<MessageType>) => {
+                dispatch(setInitMessages(initMessages))
+            })
+        }
     }, [])
 
     useEffect(() => {
@@ -49,7 +51,7 @@ const Chat = () => {
 
     const handleMessageSend = () => {
         if (user) {
-            socket.emit('send_message', {senderId: user.id, receiverId , text: messageText})
+            socket.emit('send_message', {senderId: String(user.id), receiverId, text: messageText})
             setMessageText('')
         }
     }

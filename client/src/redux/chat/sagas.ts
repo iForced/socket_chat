@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from '@redux-saga/core/effects'
-import { addMessage, addMessageRequest, ChatSagaActions, setInitMessages } from './actions'
+import { addMessageRequest, ChatSagaActions, setInitMessages } from './actions'
 import { messagesAPI } from '../../api/messagesAPI'
 import { MessageType } from './types'
 

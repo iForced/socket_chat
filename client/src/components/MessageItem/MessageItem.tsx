@@ -3,8 +3,8 @@ import React, { FC } from 'react'
 import s from './MessageItem.module.css'
 
 type PropsType = {
-    from: number
-    to: number
+    from: string
+    to: string
     text: string
 }
 

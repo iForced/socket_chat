@@ -5,8 +5,8 @@ export type ChatInitialStateType = {
 }
 export type MessageType = {
     id: number
-    senderId: number
-    receiverId: number
+    senderId: string
+    receiverId: string
     text: string
 }
 export type MessagesActionsType =

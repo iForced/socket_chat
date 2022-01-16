@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react'
+// @ts-ignore
+import s from './Profile.module.css'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppStateType } from '../../redux/store'
@@ -23,12 +25,12 @@ const Profile = () => {
     }, [])
 
     return (
-        <div>
+        <div className={s.profile}>
             {user
-                ? <h2>You are logged in as {user.login}</h2>
-                : <h2>You are not logged in</h2>
+                ? <h2 className={s.profileLogin}>Welcome back, <span className={s.userName}>{user.login}</span></h2>
+                : <h2 className={s.profileLogin}>You are not logged in</h2>
             }
-            <NavLink to="/users">Show all users</NavLink>
+            <NavLink className={s.showUsers} to="/users">Show all users</NavLink>
         </div>
     )
 }

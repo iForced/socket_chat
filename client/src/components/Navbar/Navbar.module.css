@@ -26,3 +26,6 @@
     background-color: #e38443;
     cursor: pointer;
 }
+.loginButton:hover {
+    background-color: #e09b6b;
+}

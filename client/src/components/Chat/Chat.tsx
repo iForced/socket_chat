@@ -69,12 +69,11 @@ const Chat = () => {
                 }
             </div>
             <textarea
-                cols={30}
-                rows={10}
+                className={s.messageInput}
                 value={messageText}
                 onChange={(e) => setMessageText(e.currentTarget.value)}
             />
-            <button onClick={handleMessageSend}>Send message</button>
+            <button className={s.sendMessageButton} onClick={handleMessageSend}>Send message</button>
         </div>
     )
 }

@@ -1,0 +1,28 @@
+.navBar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 10px;
+    background-color: #262626;
+    box-shadow: 6px 6px 38px 5px #0000005c;
+}
+.navLink {
+    text-decoration: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.loginButton {
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #e38443;
+    padding: 5px 10px;
+}
+.navItem {
+    transition: .2s ease-in;
+}
+.navItem:hover {
+    background-color: #e38443;
+    cursor: pointer;
+}

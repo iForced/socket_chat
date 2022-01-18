@@ -5,8 +5,8 @@ export type AuthInitialStateType = {
     isAuthorized: boolean
 }
 export type UserType = {
-    id: number | null
-    login: string | null
+    id: string
+    login: string
 }
 export type AuthActionsType =
     ReturnType<typeof setUser>

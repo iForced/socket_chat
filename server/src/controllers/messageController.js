@@ -2,32 +2,19 @@ import { Message } from '../models/models.js'
 
 class MessageController {
     async add(req, res) {
-        const {senderId, receiverId, text} = req.body
+        const {senderId, conversationId, text} = req.body
 
-        if (!senderId || !receiverId || !text) return res.status(400).json({message: 'Enter required data'})
-        const newMessage = await Message.create({senderId, receiverId, text})
+        const addedMessage = await Message.create({senderId, conversationId, text})
 
-        return res.json(newMessage)
+        return res.status(200).json(addedMessage)
     }
 
-    async getAll(req, res) {
-        let {page, limit} = req.query
-        page = page || 1
-        limit = limit || 10
-        const offset = page * limit - limit
+    async getByConversationId(req, res) {
+        const {conversationId} = req.params
 
-        const allMessages = await Message.findAndCountAll({limit, offset})
+        const conversationMessages = await Message.findAll({where: {conversationId}})
 
-        return res.json(allMessages)
-    }
-
-    async getByUserId(req, res) {
-        const {userId} = req.params
-
-        if (!userId) return res.status(400).json({message: 'User id not provided'})
-        const myMessages = await Message.findAll({where: {senderId: userId}})
-
-        return res.json(myMessages)
+        return res.status(200).json(conversationMessages)
     }
 }
 

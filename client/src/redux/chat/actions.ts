@@ -2,13 +2,13 @@ import { MessageType } from './types'
 
 export enum ChatActions {
     ADD_MESSAGE = 'CHAT/ADD_MESSAGE',
-    SET_INIT_MESSAGES = 'CHAT/SET_INIT_MESSAGES',
-    UPDATE_MESSAGES = 'CHAT/UPDATE_MESSAGES',
+    SET_CURRENT_CONVERSATION = 'CHAT/SET_CURRENT_CONVERSATION',
+    SET_INIT_MESSAGES_TO_CONVERSATION = 'CHAT/SET_INIT_MESSAGES_TO_CONVERSATION',
 }
 
 export enum ChatSagaActions {
     ADD_MESSAGE_REQUEST = 'CHAT@SAGA/ADD_MESSAGE_REQUEST',
-    SET_INIT_MESSAGES_REQUEST = 'CHAT@SAGA/SET_INIT_MESSAGES_REQUEST',
+    GET_INIT_MESSAGES_FROM_CONVERSATION_REQUEST = 'CHAT@SAGA/GET_INIT_MESSAGES_FROM_CONVERSATION_REQUEST',
 }
 
 // Reducer actions
@@ -21,19 +21,19 @@ export const addMessage = (message: MessageType) => {
         }
     } as const
 }
-export const updateMessages = (messages: Array<MessageType>) => {
+export const setCurrentConversation = (conversationId: string) => {
     return {
-        type: ChatActions.UPDATE_MESSAGES,
+        type: ChatActions.SET_CURRENT_CONVERSATION,
         payload: {
-            messages,
+            conversationId,
         }
     } as const
 }
-export const setInitMessages = (messages: Array<MessageType>) => {
+export const getInitMessagesFromConversation = (conversationId: string) => {
     return {
-        type: ChatActions.SET_INIT_MESSAGES,
+        type: ChatActions.SET_INIT_MESSAGES_TO_CONVERSATION,
         payload: {
-            messages,
+            conversationId,
         }
     } as const
 }
@@ -48,8 +48,8 @@ export const addMessageRequest = (message: MessageType) => {
         }
     }
 }
-export const setInitMessagesRequest = () => {
+export const getInitMessagesFromConversationRequest = () => {
     return {
-        type: ChatSagaActions.SET_INIT_MESSAGES_REQUEST,
+        type: ChatSagaActions.GET_INIT_MESSAGES_FROM_CONVERSATION_REQUEST,
     }
 }

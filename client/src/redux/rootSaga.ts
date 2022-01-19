@@ -5,7 +5,7 @@ import {
     watchLogoutRequestSaga,
     watchRegisterRequestSaga
 } from './auth/sagas'
-import { watchSetInitMessagesRequestSaga } from './chat/sagas'
+import { watchGetInitMessagesFromConversationRequest } from './chat/sagas'
 import { watchGetAllUsersRequestSaga } from './users/sagas'
 
 export function * rootSaga () {
@@ -14,7 +14,7 @@ export function * rootSaga () {
         watchLoginRequestSaga(),
         watchCheckMeRequestSaga(),
         watchLogoutRequestSaga(),
-        watchSetInitMessagesRequestSaga(),
+        watchGetInitMessagesFromConversationRequest(),
         watchGetAllUsersRequestSaga(),
     ])
 }

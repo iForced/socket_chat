@@ -2,13 +2,14 @@ import { MessageType } from './types'
 
 export enum ChatActions {
     ADD_MESSAGE = 'CHAT/ADD_MESSAGE',
-    SET_INIT_MESSAGES = 'CHAT/SET_INIT_MESSAGES',
-    UPDATE_MESSAGES = 'CHAT/UPDATE_MESSAGES',
+    SET_CURRENT_CONVERSATION = 'CHAT/SET_CURRENT_CONVERSATION',
+    SET_INIT_MESSAGES_FOR_CONVERSATION = 'CHAT/SET_INIT_MESSAGES_FOR_CONVERSATION',
 }
 
 export enum ChatSagaActions {
     ADD_MESSAGE_REQUEST = 'CHAT@SAGA/ADD_MESSAGE_REQUEST',
-    SET_INIT_MESSAGES_REQUEST = 'CHAT@SAGA/SET_INIT_MESSAGES_REQUEST',
+    SET_CURRENT_CONVERSATION_REQUEST = 'CHAT@SAGA/SET_CURRENT_CONVERSATION_REQUEST',
+    GET_INIT_MESSAGES_FROM_CONVERSATION_REQUEST = 'CHAT@SAGA/GET_INIT_MESSAGES_FROM_CONVERSATION_REQUEST',
 }
 
 // Reducer actions
@@ -21,17 +22,17 @@ export const addMessage = (message: MessageType) => {
         }
     } as const
 }
-export const updateMessages = (messages: Array<MessageType>) => {
+export const setCurrentConversation = (conversationId: string) => {
     return {
-        type: ChatActions.UPDATE_MESSAGES,
+        type: ChatActions.SET_CURRENT_CONVERSATION,
         payload: {
-            messages,
+            conversationId,
         }
     } as const
 }
-export const setInitMessages = (messages: Array<MessageType>) => {
+export const setInitMessagesForConversation = (messages: Array<MessageType>) => {
     return {
-        type: ChatActions.SET_INIT_MESSAGES,
+        type: ChatActions.SET_INIT_MESSAGES_FOR_CONVERSATION,
         payload: {
             messages,
         }
@@ -40,16 +41,22 @@ export const setInitMessages = (messages: Array<MessageType>) => {
 
 // Saga actions
 
-export const addMessageRequest = (message: MessageType) => {
+export const addMessageRequest = (senderId: string, receiverId: string, text: string) => {
     return {
         type: ChatSagaActions.ADD_MESSAGE_REQUEST,
         payload: {
-            message,
+            senderId,
+            receiverId,
+            text,
         }
     }
 }
-export const setInitMessagesRequest = () => {
+export const setCurrentConversationRequest = (senderId: string, receiverId: string) => {
     return {
-        type: ChatSagaActions.SET_INIT_MESSAGES_REQUEST,
+        type: ChatSagaActions.SET_CURRENT_CONVERSATION_REQUEST,
+        payload: {
+            senderId,
+            receiverId,
+        }
     }
 }

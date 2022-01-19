@@ -2,9 +2,10 @@ import { Message } from '../models/models.js'
 
 class MessageController {
     async add(req, res) {
-        const {senderId, conversationId, text} = req.body
+        const {senderId, receiverId, conversationId, text} = req.body
+        console.log(req.body)
 
-        const addedMessage = await Message.create({senderId, conversationId, text})
+        const addedMessage = await Message.create({senderId, receiverId, conversationId, text})
 
         return res.status(200).json(addedMessage)
     }

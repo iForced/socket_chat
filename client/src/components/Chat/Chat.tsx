@@ -8,29 +8,9 @@ import { checkMeRequest } from '../../redux/auth/actions'
 import io, { Socket } from 'socket.io-client'
 import { MessageType } from '../../redux/chat/types'
 import MessageItem from '../MessageItem/MessageItem'
-import { addMessage } from '../../redux/chat/actions'
+import { addMessage, setCurrentConversation, setInitMessagesForConversation } from '../../redux/chat/actions'
 import { UserType } from '../../redux/auth/types'
-
-// type UserType = {
-//     id: string
-//     login: string
-//     password: string
-// }
-// type MessageType = {
-//     id: string
-//     ownerId: string
-//     text: string
-// }
-// type ConversationType = {
-//     id: string
-//     members: Array<UserType>
-//     messages: Array<MessageType>
-// }
-// type DB = {
-//     users: Array<UserType>
-//     conversations: Array<ConversationType>
-// }
-
+import { messagesAPI } from '../../api/messagesAPI'
 
 const Chat = () => {
 
@@ -40,6 +20,7 @@ const Chat = () => {
     const isAuthorized = useSelector<AppStateType, boolean>(state => state.authReducer.isAuthorized)
     const messages = useSelector<AppStateType, Array<MessageType>>(state => state.chatReducer.messages)
     const user = useSelector<AppStateType, UserType | null>(state => state.authReducer.user)
+    const conversation = useSelector<AppStateType, string>(state => state.chatReducer.currentConversation)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -54,8 +35,6 @@ const Chat = () => {
         if (token) dispatch(checkMeRequest(token))
     }, [])
 
-
-
     useEffect(() => {
         socket.current = io('ws://localhost:5000')
 
@@ -69,24 +48,33 @@ const Chat = () => {
     }, [user])
 
     useEffect(() => {
+        const getConversation = async () => {
+            const foundedConversation = await messagesAPI.getConversation(user!.id, receiverId!)
+            if (!foundedConversation) {
+                const createdConversation = await messagesAPI.createConversation(user!.id, receiverId!)
+                dispatch(setCurrentConversation(createdConversation.id))
+                dispatch(setInitMessagesForConversation([]))
+            } else {
+                dispatch(setCurrentConversation(foundedConversation.id))
+                const messagesFromConversation = await messagesAPI.getMessagesFromConversation(foundedConversation.id)
+                dispatch(setInitMessagesForConversation(messagesFromConversation))
+            }
+        }
+        getConversation()
+
+    }, [receiverId])
+
+    useEffect(() => {
         socket.current!.on('SERVER_SEND_MESSAGE', (message: MessageType) => {
-            // dispatch(addMessage(message))
+            dispatch(addMessage(message))
         })
     }, [])
 
-
-
-
-    const handleMessageSend = () => {
-        const message = {
-            senderId: user!.id,
-            receiverId,
-            text: messageText,
-        }
-        socket.current!.emit('USER_SEND_MESSAGE', message)
+    const handleMessageSend = async () => {
+        const addedMessage = await messagesAPI.addMessage(user!.id, receiverId!, conversation, messageText)
+        socket.current!.emit('USER_SEND_MESSAGE', addedMessage)
         setMessageText('')
     }
-
 
     return (
         <div className={s.chat}>
@@ -111,35 +99,3 @@ const Chat = () => {
 }
 
 export default Chat
-
-
-// useEffect(() => {
-//
-//     socket.emit('JOIN_MY_ROOM', {myRoomId: user!.id, targetRoomId: receiverId})
-//
-//     socket.on('CONNECTED_TO_ROOM', (message) => console.log(message))
-//
-//     return () => {
-//         socket.disconnect()
-//         socket.emit('DISCONNECTED_FROM_ROOM', {
-//             message: `User ${user!.id} disconnected from this room`,
-//             targetRoomId: receiverId,
-//         })
-//     }
-// }, [])
-//
-// useEffect(() => {
-//     socket.on('SERVER_SENT_MESSAGE', (message: MessageType) => {
-//         dispatch(addMessage(message))
-//     })
-// }, [])
-//
-// const handleMessageSend = () => {
-//     const newMessage = {
-//         senderId: user!.id,
-//         receiverId,
-//         messageText,
-//     }
-//     socket.emit('USER_SENT_MESSAGE', {newMessage, receiverId})
-//     setMessageText('')
-// }

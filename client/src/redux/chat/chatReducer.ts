@@ -21,6 +21,12 @@ export const chatReducer = (state: ChatInitialStateType = initialState, action: 
                 currentConversation: action.payload.conversationId
             }
 
+        case ChatActions.SET_INIT_MESSAGES_FOR_CONVERSATION:
+            return {
+                ...state,
+                messages: action.payload.messages
+            }
+
         default:
             return state
     }

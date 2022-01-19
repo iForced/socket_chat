@@ -5,8 +5,6 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import sequelize from './db.js'
 import router from './src/routes/index.js'
-import { Message } from './src/models/models.js'
-import Sequelize, { Op } from 'sequelize'
 
 dotenv.config()
 
@@ -48,20 +46,15 @@ const start = async () => {
         io.on('connection', async (socket) => {
             console.log('User connected', socket.id)
 
-            socket.on('ADD_USER', (userId) => {
+            socket.on('ADD_USER', async (userId) => {
                 addUser(userId, socket.id)
                 console.log('Connected users: ', users)
             })
 
-
-
-            socket.on('USER_SEND_MESSAGE', async ({senderId, receiverId, text}) => {
-                const addedMessage = await Message.create({senderId, receiverId, text})
-                const user = getUser(receiverId)
-                io.to(user.socketId).emit('SERVER_SEND_MESSAGE', addedMessage)
+            socket.on('USER_SEND_MESSAGE', async (mess) => {
+                const user = getUser(mess.receiverId)
+                io.to(user.socketId).emit('SERVER_SEND_MESSAGE', mess)
             })
-
-
 
             socket.on('disconnect', () => {
                 removeUser(socket.id)
@@ -76,26 +69,3 @@ const start = async () => {
 }
 
 start()
-
-
-
-// socket.on('JOIN_MY_ROOM', ({myRoomId, targetRoomId}) => {
-//     socket.join([myRoomId, targetRoomId])
-//     io.to(targetRoomId).emit('CONNECTED_TO_ROOM', `User connected to ${targetRoomId}`)
-//     console.log(io.sockets.adapter.rooms)
-//
-//     socket.on('USER_SENT_MESSAGE', ({newMessage, receiverId}) => {
-//         const message = Message.create({senderId: newMessage.senderId, text: newMessage.text})
-//         io.to(receiverId).emit('SERVER_SENT_MESSAGE', message)
-//     })
-//
-//     socket.on('DISCONNECTED_FROM_ROOM', ({message, targetRoomId}) => {
-//         socket.leave(targetRoomId)
-//         console.log(message)
-//         console.log(io.sockets.adapter.rooms)
-//     })
-// })
-//
-// socket.on('disconnect', (reason) => {
-//     console.log('User disconnected', reason)
-// })

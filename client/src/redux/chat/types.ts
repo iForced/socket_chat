@@ -1,4 +1,8 @@
-import { addMessage, getInitMessagesFromConversation, setCurrentConversation } from './actions'
+import {
+    addMessage,
+    setCurrentConversation,
+    setInitMessagesForConversation
+} from './actions'
 
 export type ChatInitialStateType = {
     currentConversation: string
@@ -13,4 +17,4 @@ export type MessageType = {
 export type MessagesActionsType =
     ReturnType<typeof addMessage>
     | ReturnType<typeof setCurrentConversation>
-    | ReturnType<typeof getInitMessagesFromConversation>
+    | ReturnType<typeof setInitMessagesForConversation>

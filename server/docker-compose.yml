@@ -3,7 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres
-    container_name: pg_chat
+    container_name: socket-chat-postrgres
     ports:
       - "5444:5432"
     volumes:
@@ -15,19 +15,21 @@ services:
     restart: always
 
   server:
-    image: express-socket-chat
-    container_name: express_chat
+    build: ./
+    image: socket-chat-express
+    container_name: socket-chat-express
     ports:
       - "5001:5000"
     environment:
       DB_HOST: db
       DB_PASSWORD: 123
     restart: always
-    links:
+    depends_on:
       - db
 
   pgadmin:
     image: dpage/pgadmin4
+    container_name: socket-chat-pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root

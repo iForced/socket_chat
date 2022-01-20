@@ -15,11 +15,11 @@ import { messagesAPI } from '../../api/messagesAPI'
 const Chat = () => {
 
     const [messageText, setMessageText] = useState<string>('')
-    const socket = useRef<Socket>()
+    const socket = useRef<Socket | null>(null)
 
     const isAuthorized = useSelector<AppStateType, boolean>(state => state.authReducer.isAuthorized)
     const messages = useSelector<AppStateType, Array<MessageType>>(state => state.chatReducer.messages)
-    const user = useSelector<AppStateType, UserType | null>(state => state.authReducer.user)
+    const me = useSelector<AppStateType, UserType | null>(state => state.authReducer.user)
     const conversation = useSelector<AppStateType, string>(state => state.chatReducer.currentConversation)
 
     const dispatch = useDispatch()
@@ -36,7 +36,7 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        socket.current = io('ws://localhost:5000')
+        socket.current = io('ws://localhost:5000', {query: {userId: me!.id, userName: me!.login, receiverId}})
 
         return () => {
             socket.current!.disconnect()
@@ -44,14 +44,10 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        socket.current!.emit('ADD_USER', user!.id)
-    }, [user])
-
-    useEffect(() => {
         const getConversation = async () => {
-            const foundedConversation = await messagesAPI.getConversation(user!.id, receiverId!)
+            const foundedConversation = await messagesAPI.getConversation(me!.id, receiverId!)
             if (!foundedConversation) {
-                const createdConversation = await messagesAPI.createConversation(user!.id, receiverId!)
+                const createdConversation = await messagesAPI.createConversation(me!.id, receiverId!)
                 dispatch(setCurrentConversation(createdConversation.id))
                 dispatch(setInitMessagesForConversation([]))
             } else {
@@ -67,18 +63,24 @@ const Chat = () => {
     useEffect(() => {
         socket.current!.on('SERVER_SEND_MESSAGE', (message: MessageType) => {
             dispatch(addMessage(message))
+            console.log(message)
         })
     }, [])
 
     const handleMessageSend = async () => {
-        const addedMessage = await messagesAPI.addMessage(user!.id, receiverId!, conversation, messageText)
-        socket.current!.emit('USER_SEND_MESSAGE', addedMessage)
+        const payload = {
+            senderId: me!.id,
+            receiverId,
+            conversationId: conversation,
+            text: messageText
+        }
+        socket.current!.emit('USER_SEND_MESSAGE', payload)
         setMessageText('')
     }
 
     return (
         <div className={s.chat}>
-            {user!.login}
+            {me!.login}
             <div className={s.messagesField}>
                 {messages.map(message =>
                     <MessageItem

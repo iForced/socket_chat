@@ -5,6 +5,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import sequelize from './db.js'
 import router from './src/routes/index.js'
+import { Message } from './src/models/models.js'
 
 dotenv.config()
 
@@ -31,34 +32,35 @@ const start = async () => {
         await sequelize.authenticate()
         await sequelize.sync()
 
-        let users = []
+        let connectedUsers = []
 
-        const addUser = (userId, socketId) => {
-            !users.some(user => user.userId === userId) && users.push({userId, socketId})
+        const addUser = (userId, socketId, receiverId) => {
+            !connectedUsers.some(user => user.userId === userId) && connectedUsers.push({userId, socketId, receiverId})
         }
         const removeUser = (socketId) => {
-            users = users.filter(user => user.socketId !== socketId)
+            connectedUsers = connectedUsers.filter(user => user.socketId !== socketId)
         }
         const getUser = (userId) => {
-            return users.find(user => user.userId === userId)
+            return connectedUsers.find(user => user.userId === userId)
         }
 
-        io.on('connection', async (socket) => {
-            console.log('User connected', socket.id)
+        io.on('connection', (socket) => {
+            const {userId, receiverId} = socket.handshake.query
+            addUser(userId, socket.id, receiverId)
+            console.log('Connected users', connectedUsers)
 
-            socket.on('ADD_USER', async (userId) => {
-                addUser(userId, socket.id)
-                console.log('Connected users: ', users)
-            })
-
-            socket.on('USER_SEND_MESSAGE', async (mess) => {
-                const user = getUser(mess.receiverId)
-                io.to(user.socketId).emit('SERVER_SEND_MESSAGE', mess)
+            socket.on('USER_SEND_MESSAGE', async ({senderId, receiverId, conversationId, text}) => {
+                const message = await Message.create({senderId, receiverId, conversationId, text})
+                const targetUser = getUser(receiverId)
+                io.to(socket.id).emit('SERVER_SEND_MESSAGE', message)
+                if (targetUser && targetUser.receiverId === senderId) {
+                    io.to(targetUser.socketId).emit('SERVER_SEND_MESSAGE', message)
+                }
             })
 
             socket.on('disconnect', () => {
                 removeUser(socket.id)
-                console.log('User disconnected', socket.id)
+                console.log('Connected users after leave', connectedUsers)
             })
         })
 
